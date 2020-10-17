@@ -1,3 +1,25 @@
+This fork is removes the logo from the lock screen if the height or width is specifid as 0.
+
+I like xscreensaver - but I absolutely hate the icon from when 'dinosaurs roamed the earth'
+To be honest, I also hate the lockscreen UI and its terrible fonts - but that's for another day.
+
+jwz in logo.c requests not to modify the logo. I respect that but its a little weird for open source
+software. In any case, it's only removed from hte lock screen (not splash or elsewhere) and that too 
+if the user pref for height/width is 0. I think this is a happy medium.
+    1. clone this repo
+    2. You need docker to build - so apt isntall it if needed.
+    3. ./build.sh - should everything go well, you should have a tar.bz2 in bin
+    4. Point to this copy
+        cd bin
+        tar -xvf bin/xscreensaver.tar.bz2
+        mv /usr/bin/xscreensaver /usr/bin/xscreensaver.orig
+        ln -sf /path/to/xscreensaver/bin/driver/xscreensaver
+    5. Edit logo prefs in /etc/X11/app-defaults/XScreenSaver
+            *Dialog.logo.width:		0
+    6. Ensure that you restart xscreensaver daemon
+            xscreensaver-command -restart
+
+=============================================================================================
 
                               XScreenSaver
 
