@@ -349,8 +349,8 @@ new_passwd_window (saver_info *si)
   pw->shadow_width = get_integer_resource (si->dpy, "passwd.shadowThickness",
 					   "Dialog.ShadowThickness");
 
-  if (pw->preferred_logo_width == 0)  pw->preferred_logo_width = 150;
-  if (pw->preferred_logo_height == 0) pw->preferred_logo_height = 150;
+  /* if (pw->preferred_logo_width == 0)  pw->preferred_logo_width = 150; */
+  /* if (pw->preferred_logo_height == 0) pw->preferred_logo_height = 150; */
   if (pw->internal_border == 0) pw->internal_border = 15;
   if (pw->shadow_width == 0) pw->shadow_width = 4;
   if (pw->thermo_width == 0) pw->thermo_width = pw->shadow_width;
@@ -610,8 +610,10 @@ make_passwd_window (saver_info *si,
     pw->height += (pw->internal_border * 4);
 
     pw->width += pw->thermo_width + (pw->shadow_width * 3);
-
-    if (pw->preferred_logo_height > pw->height)
+    if (pw->preferred_logo_height == 0 || pw->preferred_logo_width == 0) {
+        pw->logo_width = 0;
+        pw->logo_height = 0;
+    } else if (pw->preferred_logo_height > pw->height)
       pw->height = pw->logo_height = pw->preferred_logo_height;
     else if (pw->height > pw->preferred_logo_height)
       pw->logo_height = pw->height;
@@ -664,13 +666,14 @@ make_passwd_window (saver_info *si,
 
       /* We use the default visual, not ssi->visual, so that the logo pixmap's
 	 visual matches that of the si->passwd_dialog window. */
-      pw->logo_pixmap = xscreensaver_logo (ssi->screen,
-					   /* ssi->current_visual, */
-					   DefaultVisualOfScreen(screen),
-					   si->passwd_dialog, cmap,
-					   pw->background, 
-					   &pw->logo_pixels, &pw->logo_npixels,
-					   &pw->logo_clipmask, True);
+	  if (pw->logo_width) 
+          pw->logo_pixmap = xscreensaver_logo (ssi->screen,
+                           /* ssi->current_visual, */
+                           DefaultVisualOfScreen(screen),
+                           si->passwd_dialog, cmap,
+                           pw->background, 
+                           &pw->logo_pixels, &pw->logo_npixels,
+                           &pw->logo_clipmask, True);
     }
   else /* On successive prompts, just resize the window */
     {
