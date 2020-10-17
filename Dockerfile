@@ -11,9 +11,9 @@ RUN apt update && \
 ADD . /xscreensaver
 WORKDIR /xscreensaver
 RUN ./configure && make -j 13 && \
-    find * -perm -u+rwx -mmin -1 -type f |xargs tar -cvjf xscreensaver.tar.bz2
+    find * -perm -u+rwx -cnewer Makefile -type f |xargs tar -cvjf xscreensaver.tar.bz2
 
 
 FROM scratch as export
-COPY --from=build /xscreensaver/xscreensaver.tar.bz2 /bin
+COPY --from=build /xscreensaver/xscreensaver.tar.bz2 /
 
